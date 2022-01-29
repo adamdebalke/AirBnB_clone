@@ -1,50 +1,64 @@
 #!/usr/bin/python3
-'''BaseModel class'''
-import json
+"""
+This is the "base_model" module.
+The base_model module supplies one class, BaseModel, that
+    defines all common attributes/methods for other classes.
+
+For example,
+BaseModel()
+"""
 import uuid
-from datetime import datetime as tim
-import models
+from datetime import datetime
+from models import storage
 
 
-class BaseModel():
-    '''BaseModel - defines all common attributes/methods for other classes'''
+class BaseModel:
+    """Defines a class BaseModel.
 
+    Attributes:
+        id (str): id of the class
+        created_at (str): created date of the class
+        updated_at (str): updated date of the class
+    """
     def __init__(self, *args, **kwargs):
-        '''__init__ - instantiates attributes'''
-
-        if len(kwargs) != 0:
-            '''use given dict to create instance'''
+        if kwargs:
             for key, value in kwargs.items():
-                if key == '__class__':
-                    setattr(self, key, type(self))
-                elif key == 'created_at' or key == 'updated_at':
-                    setattr(self, key,
-                            tim.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
-                else:
+                if key == "created_at":
+                    self.created_at = datetime.fromisoformat(value)
+                elif key == "updated_at":
+                    self.updated_at = datetime.fromisoformat(value)
+                elif key != "__class__":
                     setattr(self, key, value)
+
         else:
             self.id = str(uuid.uuid4())
-            self.created_at = tim.now()
+            self.created_at = datetime.today()
             self.updated_at = self.created_at
-            models.storage.new(self)
+            storage.new(self)
 
     def __str__(self):
-        '''__str__string rep of basemodel instance'''
-        return ("[{}] ({}) {}".format(type(self).__name__, self.id,
-                                      self.__dict__))
+        """Unofficial string representation of BaseModel class."""
+        return "[{}] ({}) {}".\
+            format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
-        '''save - udpate updated_at'''
-        self.updated_at = tim.now()
-        models.storage.save()
+        """Defines a function save.
+
+        Updates the public instance attribute updated_at with the
+        current datetime.
+        """
+        self.updated_at = datetime.today()
+        storage.save()
 
     def to_dict(self):
-        '''to_dict - gives dictionary rep of instance attr'''
-        new_dict = {}
-        for key, value in self.__dict__.items():
-            if key == 'created_at' or key == 'updated_at':
-                new_dict[key] = value.isoformat()
-            else:
-                new_dict[key] = value
-        new_dict['__class__'] = type(self).__name__
-        return new_dict
+        """Defines a function to_dict.
+
+        Updates the public instance attribute updated_at with the
+        current datetime.
+        """
+        dict_r = {}
+        dict_r.update(self.__dict__)
+        dict_r.update({'__class__': self.__class__.__name__,
+                       'created_at': self.created_at.isoformat(),
+                       'updated_at': self.updated_at.isoformat()})
+        return dict_r
