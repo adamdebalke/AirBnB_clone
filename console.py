@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """
 This is the "console" file.
+
 The console file contains the entry point of the command interpreter.
 """
 import cmd
@@ -17,6 +18,7 @@ from models import storage
 
 class HBNBCommand(cmd.Cmd):
     """Defines a class HBNBCommand.
+
     Attributes:
         prompt (str): prompt to display to the user
         all_classes (dict): list of all classes
