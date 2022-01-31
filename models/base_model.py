@@ -3,7 +3,6 @@
 This is the "base_model" module.
 The base_model module supplies one class, BaseModel, that
     defines all common attributes/methods for other classes.
-
 For example,
 BaseModel()
 """
@@ -14,7 +13,6 @@ from models import storage
 
 class BaseModel:
     """Defines a class BaseModel.
-
     Attributes:
         id (str): id of the class
         created_at (str): created date of the class
@@ -43,7 +41,6 @@ class BaseModel:
 
     def save(self):
         """Defines a function save.
-
         Updates the public instance attribute updated_at with the
         current datetime.
         """
@@ -52,7 +49,6 @@ class BaseModel:
 
     def to_dict(self):
         """Defines a function to_dict.
-
         Updates the public instance attribute updated_at with the
         current datetime.
         """
